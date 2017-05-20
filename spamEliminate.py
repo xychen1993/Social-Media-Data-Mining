@@ -1,27 +1,29 @@
 import json
-import pandas as pd
 
-def read_data_file(fileName):
-	tweets_data = []
-	tweets_file = open(fileName, "r")
+def filter(readfile, outfile):
+	tweets_file = open(readfile, "r")
+	outfile = open(outfile, 'a')
 	for line in tweets_file:
 	    try:
 	    	tweet = json.loads(line)
-	    	if 'http' not in tweet['text']:
-	    		tweets_data.append(tweet)
+	    	if 'http' not in tweet['text'] and tweet['retweeted'] == False:
+	    		json.dump(tweet, outfile)
+	    		outfile.write('\n')
 	    except:
 	        continue
-	print len(tweets_data)
-	return tweets_data
-
-
-def write_file(data, fileName):
-	with open(fileName, 'w') as outfile:
-		json.dump(data, outfile)
+	
+# def read(readfile):
+# 	tweets_file = open(readfile, "r")
+# 	for line in tweets_file:
+# 	    try:
+# 	    	tweet = json.loads(line)
+# 	    	print 1
+# 	    except:
+# 	        continue
 
 def main():
-	data_without_spam = read_data_file('data.json')
-	write_file(data_without_spam, 'data_clean.json')
+	filter('data.json', 'data_clean.json')
+	# read('data_clean.json')
 
 if __name__ == "__main__":
     main()
